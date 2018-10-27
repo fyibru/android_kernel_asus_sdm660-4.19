@@ -1694,7 +1694,14 @@ pick_next_task_rt(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 
 	WARN_ON_ONCE(prev || rf);
 
-	if (!sched_rt_runnable(rq))
+	/*
+	 * We may dequeue prev's rt_rq in put_prev_task().
+	 * So, we update time before rt_queued check.
+	 */
+	if (prev->sched_class == &rt_sched_class)
+		update_curr_rt(rq);
+
+	if (!rt_rq->rt_queued)
 		return NULL;
 
 	p = _pick_next_task_rt(rq);
