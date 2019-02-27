@@ -6675,7 +6675,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
 		time = cpu_clock(this);
 	}
 
-	time = local_clock();
+	time = cpu_clock(this);
 
 	cpumask_and(cpus, sched_domain_span(sd), &p->cpus_allowed);
 
@@ -6687,7 +6687,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
 			break;
 	}
 
-	time = local_clock() - time;
+        time = cpu_clock(this) - time;
 	update_avg(&this_sd->avg_scan_cost, time);
 
 	return cpu;
