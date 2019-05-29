@@ -45,10 +45,11 @@ pick_next_task_stop(struct rq *rq, struct task_struct *prev, struct rq_flags *rf
 {
 	WARN_ON_ONCE(prev || rf);
 
-	if (!sched_stop_runnable(rq))
+	WARN_ON_ONCE(prev || rf);
+
+	if (!stop || !task_on_rq_queued(stop))
 		return NULL;
 
-	put_prev_task(rq, prev);
 	set_next_task_stop(rq, stop);
 
 	return stop;

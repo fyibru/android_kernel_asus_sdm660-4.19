@@ -1809,7 +1809,9 @@ pick_next_task_dl(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
 
 	WARN_ON_ONCE(prev || rf);
 
-	if (!sched_dl_runnable(rq))
+	dl_rq = &rq->dl;
+
+	if (unlikely(!dl_rq->dl_nr_running))
 		return NULL;
 
 	dl_se = pick_next_dl_entity(rq, dl_rq);
