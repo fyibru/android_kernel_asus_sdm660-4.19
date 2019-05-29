@@ -410,7 +410,7 @@ static void put_prev_task_idle(struct rq *rq, struct task_struct *prev)
 {
 }
 
-static void set_next_task_idle(struct rq *rq, struct task_struct *next, bool first)
+static void set_next_task_idle(struct rq *rq, struct task_struct *next)
 {
 	update_idle_core(rq);
 	schedstat_inc(rq->sched_goidle);
@@ -421,10 +421,8 @@ pick_next_task_idle(struct rq *rq, struct task_struct *prev, struct rq_flags *rf
 {
 	struct task_struct *next = rq->idle;
 
-	if (prev)
-		put_prev_task(rq, prev);
-
-	set_next_task_idle(rq, next, true);
+	put_prev_task(rq, prev);
+	set_next_task_idle(rq, next);
 
 	return next;
 }
