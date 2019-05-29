@@ -8246,9 +8246,6 @@ done: __maybe_unused;
 	return p;
 
 idle:
-	if (!rf)
-		return NULL;
-
 	new_tasks = newidle_balance(rq, rf);
 
 	/*
@@ -12014,6 +12011,7 @@ int newidle_balance(struct rq *this_rq, struct rq_flags *rf)
 	int pulled_task = 0;
     u64 avg_idle = this_rq->avg_idle;
 
+	update_misfit_status(NULL, this_rq);
 	/*
 	 * We must set idle_stamp _before_ calling idle_balance(), such that we
 	 * measure the duration of idle_balance() as idle time.
