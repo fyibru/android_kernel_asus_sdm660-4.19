@@ -45,14 +45,11 @@ pick_next_task_stop(struct rq *rq, struct task_struct *prev, struct rq_flags *rf
 {
 	WARN_ON_ONCE(prev || rf);
 
-	WARN_ON_ONCE(prev || rf);
-
-	if (!stop || !task_on_rq_queued(stop))
+	if (!sched_stop_runnable(rq))
 		return NULL;
 
-	set_next_task_stop(rq, stop);
-
-	return stop;
+	set_next_task_stop(rq, rq->stop);
+	return rq->stop;
 }
 
 static void
@@ -72,7 +69,7 @@ static void yield_task_stop(struct rq *rq)
 	BUG(); /* the stop task should never yield, its pointless. */
 }
 
-static void put_prev_task_stop(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+static void put_prev_task_stop(struct rq *rq, struct task_struct *prev)
 {
 	struct task_struct *curr = rq->curr;
 	u64 delta_exec;
