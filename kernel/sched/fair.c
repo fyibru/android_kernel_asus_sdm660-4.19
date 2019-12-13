@@ -6675,11 +6675,13 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
 		time = cpu_clock(this);
 	}
 
+	time = local_clock();
+
+	cpumask_and(cpus, sched_domain_span(sd), &p->cpus_allowed);
+
 	for_each_cpu_wrap(cpu, cpus, target) {
 		if (!--nr)
 			return -1;
-		if (!cpumask_test_cpu(cpu, &p->cpus_allowed))
-			continue;
 	/* Don't need to rebalance while attached to NULL domain */
 		if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
 			break;
