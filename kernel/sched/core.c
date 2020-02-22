@@ -4069,6 +4069,7 @@ void scheduler_tick(void)
 	u64 wallclock;
 	bool early_notif;
 #endif
+	unsigned long thermal_pressure;
 
 	u32 old_load;
 	struct related_thread_group *grp;
@@ -4084,6 +4085,8 @@ void scheduler_tick(void)
 	update_task_ravg(rq->curr, rq, TASK_UPDATE, wallclock, 0);
 #endif
 	update_rq_clock(rq);
+	thermal_pressure = arch_scale_thermal_pressure(cpu_of(rq));
+	update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure);
 	curr->sched_class->task_tick(rq, curr, 0);
 	calc_global_load_tick(rq);
 	psi_task_tick(rq);
