@@ -283,20 +283,6 @@ static void flush_smp_call_function_queue(bool warn_cpu_offline)
 		csd_unlock(csd);
 		func(info);
 	}
-
-	/*
-	 * Handle irq works queued remotely by irq_work_queue_on().
-	 * Smp functions above are typically synchronous so they
-	 * better run first since some other CPUs may be busy waiting
-	 * for them.
-	 */
-	llist_for_each_entry_safe(csd, csd_next, entry, llist) {
-		smp_call_func_t func = csd->func;
-		void *info = csd->info;
-
-		csd_unlock(csd);
-		func(info);
-	}
 }
 
 void flush_smp_call_function_from_idle(void)
