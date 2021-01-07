@@ -10824,7 +10824,6 @@ redo:
 	env.src_rq = busiest;
 
 	ld_moved = 0;
-	/* Clear this flag as soon as we find a pullable task */
 	env.flags |= LBF_ALL_PINNED;
 	if (busiest->nr_running > 1) {
 		/*
@@ -10985,6 +10984,9 @@ more_balance:
 			/* Record that we found at least one task that could run on this_cpu */
 			env.flags &= ~LBF_ALL_PINNED;
 
+			/* Record that we found at least one task that could run on this_cpu */
+			env.flags &= ~LBF_ALL_PINNED;
+			
 			/*
 			 * ->active_balance synchronizes accesses to
 			 * ->active_balance_work.  Once set, it's cleared
