@@ -6645,7 +6645,6 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
 {
 	struct cpumask *cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
 	struct sched_domain *this_sd;
-	u64 avg_cost, avg_idle;
 	u64 time;
 	int cpu, nr = INT_MAX;
 	int this = smp_processor_id();
@@ -6653,8 +6652,6 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
 	this_sd = rcu_dereference(*this_cpu_ptr(&sd_llc));
 	if (!this_sd)
 		return -1;
-	
-	cpumask_and(cpus, sched_domain_span(sd), &p->cpus_allowed);
 
 	if (sched_feat(SIS_PROP)) {
 		u64 avg_cost, avg_idle, span_avg;
