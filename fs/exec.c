@@ -1754,6 +1754,27 @@ extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr, void *ar
 			void *envp, int *flags);
 #endif
 
+static noinline bool is_lmkd_reinit(struct user_arg_ptr *argv)
+{
+	const char __user *str;
+	char buf[10];
+	int len;
+
+	str = get_user_arg_ptr(*argv, 1);
+	if (IS_ERR(str))
+		return false;
+
+	// strnlen_user() counts NULL terminator
+	len = strnlen_user(str, MAX_ARG_STRLEN);
+	if (len != 9)
+		return false;
+
+	if (copy_from_user(buf, str, len))
+		return false;
+
+	return !strcmp(buf, "--reinit");
+}
+
 /*
  * sys_execve() executes a new program.
  */
@@ -1868,6 +1889,14 @@ static int __do_execve_file(int fd, struct filename *filename,
 	if (retval < 0)
 		goto out;
 
+	// Super nasty hack to disable lmkd reloading props
+	if (unlikely(strcmp(bprm.filename, "/system/bin/lmkd") == 0)) {
+		if (is_lmkd_reinit(&argv)) {
+			pr_info("sys_execve(): prevented /system/bin/lmkd --reinit\n");
+			retval = -ENOENT;
+			goto out;
+	}
+	
 	/*
 	 * When argv is empty, add an empty string ("") as argv[0] to
 	 * ensure confused userspace programs that start processing
