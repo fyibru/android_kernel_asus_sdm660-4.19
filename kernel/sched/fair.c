@@ -11166,9 +11166,6 @@ more_balance:
 				busiest->active_balance = 1;
 				busiest->push_cpu = this_cpu;
 				active_balance = 1;
-#ifdef CONFIG_SCHED_WALT				
-				mark_reserved(this_cpu);
-#endif
 			}
 			raw_spin_unlock_irqrestore(&busiest->lock, flags);
 
@@ -11410,7 +11407,6 @@ out_unlock:
 	push_task = busiest_rq->push_task;
 #endif
 	target_cpu = busiest_rq->push_cpu;
-	clear_reserved(target_cpu);
 #ifdef CONFIG_SCHED_WALT
 	if (push_task)
 		busiest_rq->push_task = NULL;
@@ -11421,6 +11417,7 @@ out_unlock:
 		if (push_task_detached)
 			attach_one_task(target_rq, push_task);
 		put_task_struct(push_task);
+		clear_reserved(target_cpu);
 	}
 #endif
 	if (p)
