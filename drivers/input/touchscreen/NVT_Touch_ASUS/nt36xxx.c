@@ -849,7 +849,7 @@ static void nvt_flash_proc_deinit(void)
 #define GESTURE_SLIDE_LEFT      23
 #define GESTURE_SLIDE_RIGHT     24
 /* customized gesture id */
-#define DATA_PROTOCOL           30
+#define DATA_PROTOCOL           31
 
 /* function page definition */
 #define FUNCPAGE_GESTURE         1
@@ -884,6 +884,11 @@ void snvt_ts_wakeup_gesture_report(uint8_t gesture_id, uint8_t *data)
 #endif
 	
 	SNVT_LOG("gesture_id = %d\n", gesture_id);
+
+	// test gesture
+	if (allow_dclick && gesture_id == 2)
+		SNVT_LOG("Trying to wake up devices with ,Gesture id: %d", gesture_id);
+		keycode = sgesture_key_array[3];
 
 	if (allow_gesture) {
 		switch (gesture_id) {
