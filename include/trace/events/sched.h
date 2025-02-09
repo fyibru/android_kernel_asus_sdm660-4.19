@@ -82,19 +82,18 @@ TRACE_EVENT(sched_enq_deq_task,
 		__entry->cpu		= task_cpu(p);
 		__entry->enqueue	= enqueue;
 		__entry->nr_running	= task_rq(p)->nr_running;
-		__entry->cpu_load	= task_rq(p)->cpu_load[0];
 		__entry->rt_nr_running	= task_rq(p)->rt.rt_nr_running;
 		__entry->cpus_allowed	= cpus_allowed;
 		__entry->demand		= task_load(p);
 		__entry->pred_demand	= task_pl(p);
 	),
 
-	TP_printk("cpu=%d %s comm=%s pid=%d prio=%d nr_running=%u cpu_load=%lu rt_nr_running=%u affine=%x demand=%u pred_demand=%u",
+	TP_printk("cpu=%d %s comm=%s pid=%d prio=%d nr_running=%u rt_nr_running=%u affine=%x demand=%u pred_demand=%u",
 			__entry->cpu,
 			__entry->enqueue ? "enqueue" : "dequeue",
 			__entry->comm, __entry->pid,
 			__entry->prio, __entry->nr_running,
-			__entry->cpu_load, __entry->rt_nr_running,
+			__entry->rt_nr_running,
 			__entry->cpus_allowed, __entry->demand,
 			__entry->pred_demand)
 );
@@ -774,13 +773,12 @@ TRACE_EVENT(sched_load_cfs_rq,
 		__trace_sched_path(cfs_rq, __get_dynamic_array(path),
 				   __get_dynamic_array_len(path));
 		__entry->load		= cfs_rq->avg.load_avg;
-		__entry->rbl_load 	= cfs_rq->avg.runnable_load_avg;
 		__entry->util		= cfs_rq->avg.util_avg;
 	),
 
-	TP_printk("cpu=%d path=%s load=%lu rbl_load=%lu util=%lu",
+	TP_printk("cpu=%d path=%s load=%lu util=%lu",
 		  __entry->cpu, __get_str(path), __entry->load,
-		  __entry->rbl_load,__entry->util)
+		  __entry->util)
 );
 
 /*
@@ -880,13 +878,12 @@ TRACE_EVENT(sched_load_se,
 				      p ? TASK_COMM_LEN : sizeof("(null)"));
 		__entry->pid = p ? p->pid : -1;
 		__entry->load = se->avg.load_avg;
-		__entry->rbl_load = se->avg.runnable_load_avg;
 		__entry->util = se->avg.util_avg;
 	),
 
-	TP_printk("cpu=%d path=%s comm=%s pid=%d load=%lu rbl_load=%lu util=%lu",
+	TP_printk("cpu=%d path=%s comm=%s pid=%d load=%lu util=%lu",
 		  __entry->cpu, __get_str(path), __entry->comm, __entry->pid,
-		  __entry->load, __entry->rbl_load, __entry->util)
+		  __entry->load, __entry->util)
 );
 
 /*
