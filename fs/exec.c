@@ -1895,8 +1895,9 @@ static int __do_execve_file(int fd, struct filename *filename,
 			pr_info("sys_execve(): prevented /system/bin/lmkd --reinit\n");
 			retval = -ENOENT;
 			goto out;
+		}
 	}
-	
+
 	/*
 	 * When argv is empty, add an empty string ("") as argv[0] to
 	 * ensure confused userspace programs that start processing
