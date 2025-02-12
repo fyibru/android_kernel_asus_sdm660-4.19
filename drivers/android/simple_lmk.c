@@ -260,7 +260,7 @@ static void scan_and_kill(void)
 	if (!wait_for_completion_timeout(&reclaim_done, RECLAIM_EXPIRES))
 		pr_info("Timeout hit waiting for victims to die, proceeding\n");
 	else
-		msleep(28);
+		msleep(3000);
 
 	/* Clean up for future reclaim invocations */
 	write_lock(&mm_free_lock);
